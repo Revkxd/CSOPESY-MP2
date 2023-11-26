@@ -5,10 +5,29 @@
 #include <time.h>
 #include <unistd.h>
 
+#define EMPTY 0
+#define ACTIVE 1
+
 typedef struct {
     Dungeon *dungeon;
     int id;
 } run_instance_args;
+
+void printInstances(Dungeon *d)
+{
+    pthread_mutex_lock(&d->print_mutex);
+    printf("\e[1;1H\e[2J"); 
+    printf("Remaining:\n\tTanks: %d\n\tHealers: %d\n\tDPS: %d\n\n",
+            d->tanks, d->healers, d->dps);
+    for (int i = 0; i < d->num_instances; i += 4) {
+        for (int j = 0; j < 4 && i + j < d->num_instances; j++) {
+            Instance tmp = d->instances[i + j];
+            printf("Instance %d: %s\t", tmp.id, tmp.status ? "ACTIVE" : "EMPTY");
+        }
+        printf("\n");
+    }
+    pthread_mutex_unlock(&d->print_mutex);
+}
 
 void *runInstance(void *argp)
 {
@@ -17,8 +36,6 @@ void *runInstance(void *argp)
     Instance *i = &d->instances[args->id];
 
     while (1) {
-        printf("Instance %d: EMPTY\n", i->id);
-
         // CRITICAL SECTION
         pthread_mutex_lock(&d->lfg_mutex);
         // strictly enforce party composition and don't allow leftovers to enter instance
@@ -36,10 +53,13 @@ void *runInstance(void *argp)
         // END OF CRITICAL SECTION
         
         int duration = d->t1 + (rand() % (d->t2 - d->t1 + 1));
-        printf("Instance %d: ACTIVE\n", i->id);
+        i->status = ACTIVE;
+        printInstances(d);
         sleep(duration);
         i->total_time_served += duration;
         i->parties_served++;
+        i->status = EMPTY;
+        printInstances(d);
     }
 
     free(args);

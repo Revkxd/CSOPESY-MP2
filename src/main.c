@@ -20,9 +20,10 @@ int main(int argc, char **argv)
 
     Instance instances[num_instances];
     for (int i = 0; i < num_instances; i++)
-        instances[i] = (Instance){(pthread_t)NULL, i + 1, 0, 0, 0, 0, 0};
+        instances[i] = (Instance){(pthread_t)NULL, i + 1, 0, 0, 0, 0, 0, 0};
     pthread_mutex_t l1 = PTHREAD_MUTEX_INITIALIZER;
-    Dungeon d = {instances, l1, num_instances, tanks, healers, dps, t1, t2};
+    pthread_mutex_t l2 = PTHREAD_MUTEX_INITIALIZER;
+    Dungeon d = {instances, l1, l2, num_instances, tanks, healers, dps, t1, t2};
     runDungeon(&d);
     printInstanceStats(d);
 

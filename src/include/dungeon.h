@@ -5,6 +5,7 @@
 typedef struct {
     pthread_t instance;
     int id;
+    int status;
     int parties_served;
     int tanks_served;
     int healers_served;
@@ -15,6 +16,7 @@ typedef struct {
 typedef struct {
     Instance *instances;
     pthread_mutex_t lfg_mutex;
+    pthread_mutex_t print_mutex;
     int num_instances;
     int tanks;
     int healers;
