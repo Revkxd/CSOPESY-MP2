@@ -87,6 +87,7 @@ void runDungeon(Dungeon *d)
 void printInstanceStats(Dungeon d)
 {
     printf("\n============ SUMMARY ============\n\n");
+    int total_served = 0;
     for (int i = 0; i < d.num_instances; i++) {
         Instance instance = d.instances[i];
         printf("Instance %d:\n"
@@ -99,7 +100,9 @@ void printInstanceStats(Dungeon d)
                 instance.healers_served, instance.dps_served,
                 instance.total_time_served
         );
+        total_served += instance.parties_served;
     }
+    printf("\nTotal Parties Served: %d\n", total_served);
     printf("\nLeftovers:\n\tTanks: %d\n\tHealers: %d\n\tDPS: %d\n",
             d.tanks, d.healers, d.dps);
     printf("\n========= END OF SUMMARY =========\n");
