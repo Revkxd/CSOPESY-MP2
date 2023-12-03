@@ -37,6 +37,7 @@ void *runInstance(void *argp)
     while (1) {
         // CRITICAL SECTION
         fifo_monitor_lock(&d->lfg_monitor);
+        printInstances(d);
         // strictly enforce party composition and don't allow leftovers to enter instance
         if (d->tanks < 1 || d->healers < 1 || d->dps < 3) {
             fifo_monitor_unlock(&d->lfg_monitor);
@@ -49,7 +50,6 @@ void *runInstance(void *argp)
         d->dps -= 3;
         i->dps_served += 3;
         i->status = ACTIVE;
-        printInstances(d);
         fifo_monitor_unlock(&d->lfg_monitor);
         // END OF CRITICAL SECTION
         
