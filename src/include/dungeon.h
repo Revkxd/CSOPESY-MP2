@@ -17,7 +17,6 @@ typedef struct {
 typedef struct {
     Instance *instances;
     fifo_monitor_t lfg_monitor;
-    pthread_mutex_t print_mutex;
     int num_instances;
     int tanks;
     int healers;

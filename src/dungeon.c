@@ -16,7 +16,6 @@ typedef struct {
 
 void printInstances(Dungeon *d)
 {
-    pthread_mutex_lock(&d->print_mutex);
     printf("\e[1;1H\e[2J"); 
     printf("Remaining:\n\tTanks: %d\n\tHealers: %d\n\tDPS: %d\n\n",
             d->tanks, d->healers, d->dps);
@@ -27,7 +26,6 @@ void printInstances(Dungeon *d)
         }
         printf("\n");
     }
-    pthread_mutex_unlock(&d->print_mutex);
 }
 
 void *runInstance(void *argp)
@@ -50,17 +48,16 @@ void *runInstance(void *argp)
         i->healers_served++;
         d->dps -= 3;
         i->dps_served += 3;
+        i->status = ACTIVE;
+        printInstances(d);
         fifo_monitor_unlock(&d->lfg_monitor);
         // END OF CRITICAL SECTION
         
         int duration = d->t1 + (rand() % (d->t2 - d->t1 + 1));
-        i->status = ACTIVE;
-        printInstances(d);
         sleep(duration);
         i->total_time_served += duration;
         i->parties_served++;
         i->status = EMPTY;
-        printInstances(d);
     }
 
     free(args);

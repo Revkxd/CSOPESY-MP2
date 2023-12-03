@@ -23,8 +23,7 @@ int main(int argc, char **argv)
     for (int i = 0; i < num_instances; i++)
         instances[i] = (Instance){(pthread_t)NULL, i + 1, 0, 0, 0, 0, 0, 0};
     fifo_monitor_t m1 = FIFO_MONITOR_INIT;
-    pthread_mutex_t l1 = PTHREAD_MUTEX_INITIALIZER;
-    Dungeon d = {instances, m1, l1, num_instances, tanks, healers, dps, t1, t2};
+    Dungeon d = {instances, m1, num_instances, tanks, healers, dps, t1, t2};
     runDungeon(&d);
     printInstanceStats(d);
 
