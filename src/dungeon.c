@@ -1,4 +1,5 @@
 #include "include/dungeon.h"
+#include "include/monitor.h"
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -37,10 +38,10 @@ void *runInstance(void *argp)
 
     while (1) {
         // CRITICAL SECTION
-        pthread_mutex_lock(&d->lfg_mutex);
+        fifo_monitor_lock(&d->lfg_monitor);
         // strictly enforce party composition and don't allow leftovers to enter instance
         if (d->tanks < 1 || d->healers < 1 || d->dps < 3) {
-            pthread_mutex_unlock(&d->lfg_mutex);
+            fifo_monitor_unlock(&d->lfg_monitor);
             break;
         }
         d->tanks--;
@@ -49,7 +50,7 @@ void *runInstance(void *argp)
         i->healers_served++;
         d->dps -= 3;
         i->dps_served += 3;
-        pthread_mutex_unlock(&d->lfg_mutex);
+        fifo_monitor_unlock(&d->lfg_monitor);
         // END OF CRITICAL SECTION
         
         int duration = d->t1 + (rand() % (d->t2 - d->t1 + 1));

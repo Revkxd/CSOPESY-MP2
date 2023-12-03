@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pthread.h>
+#include "monitor.h"
 
 typedef struct {
     pthread_t instance;
@@ -15,7 +16,7 @@ typedef struct {
 
 typedef struct {
     Instance *instances;
-    pthread_mutex_t lfg_mutex;
+    fifo_monitor_t lfg_monitor;
     pthread_mutex_t print_mutex;
     int num_instances;
     int tanks;
