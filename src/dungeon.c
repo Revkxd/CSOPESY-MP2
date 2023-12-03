@@ -50,6 +50,7 @@ void *runInstance(void *argp)
         d->dps -= 3;
         i->dps_served += 3;
         i->status = ACTIVE;
+        printInstances(d);
         fifo_monitor_unlock(&d->lfg_monitor);
         // END OF CRITICAL SECTION
         
