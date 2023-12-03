@@ -19,11 +19,11 @@ int main(int argc, char **argv)
     int t1 = atoi(argv[5]);
     int t2 = atoi(argv[6]);
 
-    Instance instances[num_instances];
+    instance_t instances[num_instances];
     for (int i = 0; i < num_instances; i++)
-        instances[i] = (Instance){(pthread_t)NULL, i + 1, 0, 0, 0, 0, 0, 0};
+        instances[i] = (instance_t){(pthread_t)NULL, i + 1, 0, 0, 0, 0, 0, 0};
     fifo_monitor_t m1 = FIFO_MONITOR_INIT;
-    Dungeon d = {instances, m1, num_instances, tanks, healers, dps, t1, t2};
+    dungeon_t d = {instances, m1, num_instances, tanks, healers, dps, t1, t2};
     runDungeon(&d);
     printInstanceStats(d);
 

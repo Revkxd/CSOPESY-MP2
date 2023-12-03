@@ -12,10 +12,10 @@ typedef struct {
     int healers_served;
     int dps_served;
     int total_time_served;
-} Instance;
+} instance_t;
 
 typedef struct {
-    Instance *instances;
+    instance_t *instances;
     fifo_monitor_t lfg_monitor;
     int num_instances;
     int tanks;
@@ -23,7 +23,7 @@ typedef struct {
     int dps;
     int t1;
     int t2;
-} Dungeon;
+} dungeon_t;
 
-void runDungeon(Dungeon *d);
-void printInstanceStats(Dungeon d);
+void runDungeon(dungeon_t *d);
+void printInstanceStats(dungeon_t d);

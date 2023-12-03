@@ -10,18 +10,18 @@
 #define ACTIVE 1
 
 typedef struct {
-    Dungeon *dungeon;
+    dungeon_t *dungeon;
     int id;
-} run_instance_args;
+} run_instance_args_t;
 
-void printInstances(Dungeon *d)
+void printInstances(dungeon_t *d)
 {
     printf("\e[1;1H\e[2J"); 
     printf("Remaining:\n\tTanks: %d\n\tHealers: %d\n\tDPS: %d\n\n",
             d->tanks, d->healers, d->dps);
     for (int i = 0; i < d->num_instances; i += 4) {
         for (int j = 0; j < 4 && i + j < d->num_instances; j++) {
-            Instance tmp = d->instances[i + j];
+            instance_t tmp = d->instances[i + j];
             printf("Instance %d: %s\t", tmp.id, tmp.status ? "ACTIVE" : "EMPTY");
         }
         printf("\n");
@@ -30,9 +30,9 @@ void printInstances(Dungeon *d)
 
 void *runInstance(void *argp)
 {
-    run_instance_args *args = argp;
-    Dungeon *d = args->dungeon;
-    Instance *i = &d->instances[args->id];
+    run_instance_args_t *args = argp;
+    dungeon_t *d = args->dungeon;
+    instance_t *i = &d->instances[args->id];
 
     while (1) {
         // CRITICAL SECTION
@@ -64,11 +64,11 @@ void *runInstance(void *argp)
     return NULL;
 }
 
-void runDungeon(Dungeon *d)
+void runDungeon(dungeon_t *d)
 {
     srand(time(NULL));
     for (int i = 0; i < d->num_instances; i++) {
-        run_instance_args *args = malloc(sizeof(run_instance_args));
+        run_instance_args_t *args = malloc(sizeof(run_instance_args_t));
         if (args == NULL) {
             fprintf(stderr, "Error: Failed to create instance args (id=%d)\n", i);
             continue;
@@ -82,12 +82,12 @@ void runDungeon(Dungeon *d)
         pthread_join(d->instances[i].instance, NULL);
 }
 
-void printInstanceStats(Dungeon d)
+void printInstanceStats(dungeon_t d)
 {
     printf("\n============ SUMMARY ============\n\n");
     int total_served = 0;
     for (int i = 0; i < d.num_instances; i++) {
-        Instance instance = d.instances[i];
+        instance_t instance = d.instances[i];
         printf("Instance %d:\n"
                 "\tParties Served: %d\n"
                 "\t\tTanks Served: %d\n"
