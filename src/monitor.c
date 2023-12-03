@@ -1,7 +1,6 @@
 #include "include/monitor.h"
 #include <pthread.h>
 
-#define FIFO_MONITOR_INIT {PTHREAD_COND_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, 0, 0}
 
 void fifo_monitor_lock(fifo_monitor_t *monitor)
 {

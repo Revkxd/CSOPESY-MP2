@@ -2,6 +2,8 @@
 
 #include <pthread.h>
 
+#define FIFO_MONITOR_INIT {PTHREAD_COND_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, 0, 0}
+
 typedef struct {
     pthread_mutex_t lock;
     pthread_cond_t cond;
